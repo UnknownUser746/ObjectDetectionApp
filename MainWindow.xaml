@@ -1,0 +1,285 @@
+﻿<Window x:Class="ObjectDetectionApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Object Detection" Height="820" Width="1050"
+        Background="White" FontFamily="Segoe UI">
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title -->
+        <TextBlock Grid.Row="0" Text="Object Detection" FontSize="22" FontWeight="Light"
+                   Foreground="#1A1A1A" Margin="0,0,0,20"/>
+
+        <!-- Model Path Row -->
+        <Grid Grid.Row="1" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="90"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Model path" FontSize="12"
+                       Foreground="#888" VerticalAlignment="Center"/>
+            <Border Grid.Column="1" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4" Margin="0,0,8,0">
+                <TextBox x:Name="ModelPathTextBox" FontSize="13" Foreground="#333"
+                         Padding="10,7" BorderThickness="0" Background="Transparent"
+                         VerticalContentAlignment="Center"/>
+            </Border>
+            <Button Grid.Column="2" Content="Browse" Click="BrowseModel_Click"
+                    Padding="16,7" Background="White" Foreground="#333"
+                    BorderBrush="#E0E0E0" BorderThickness="1" FontSize="13" Cursor="Hand">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#F5F5F5"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </Grid>
+
+        <!-- Image Path Row -->
+        <Grid Grid.Row="2" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="90"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Image path" FontSize="12"
+                       Foreground="#888" VerticalAlignment="Center"/>
+            <Border Grid.Column="1" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4" Margin="0,0,8,0">
+                <TextBox x:Name="PathTextBox" FontSize="13" Foreground="#333"
+                         Padding="10,7" BorderThickness="0" Background="Transparent"
+                         VerticalContentAlignment="Center"
+                         KeyDown="PathTextBox_KeyDown"/>
+            </Border>
+            <Button Grid.Column="2" Content="Browse" Click="Browse_Click"
+                    Padding="16,7" Margin="0,0,8,0" Background="White" Foreground="#333"
+                    BorderBrush="#E0E0E0" BorderThickness="1" FontSize="13" Cursor="Hand">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#F5F5F5"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button Grid.Column="3" Content="Detect" Click="Detect_Click"
+                    Padding="20,7" Background="#1A1A1A" Foreground="White"
+                    BorderThickness="0" FontSize="13" Cursor="Hand">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#333333"/>
+                                        </Trigger>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Background" Value="#CCCCCC"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </Grid>
+
+        <!-- Image + Canvas Area -->
+        <Border Grid.Row="3" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4" Background="#FAFAFA">
+            <Grid>
+                <!-- Placeholder -->
+                <TextBlock x:Name="PlaceholderText"
+                   Text="Load a model and an image, then click Detect."
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Foreground="#AAAAAA" FontSize="14"/>
+
+                <!-- Zoom buttons (top-right corner) -->
+                <StackPanel x:Name="ZoomControls" Orientation="Horizontal"
+                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                    Margin="0,8,8,0" Panel.ZIndex="10"
+                    Visibility="Collapsed">
+                    <Button Content="−" Click="ZoomOut_Click" Width="28" Height="28"
+                    FontSize="16" Background="White" BorderBrush="#E0E0E0"
+                    BorderThickness="1" Cursor="Hand" Margin="0,0,4,0">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="4">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#F0F0F0"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <TextBlock x:Name="ZoomLabel" Text="100%" VerticalAlignment="Center"
+                       FontSize="12" Foreground="#555" Margin="0,0,4,0" MinWidth="38"
+                       TextAlignment="Center"/>
+                    <Button Content="+" Click="ZoomIn_Click" Width="28" Height="28"
+                    FontSize="16" Background="White" BorderBrush="#E0E0E0"
+                    BorderThickness="1" Cursor="Hand" Margin="0,0,4,0">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="4">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#F0F0F0"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button Content="Fit" Click="ZoomFit_Click" Height="28"
+                    Padding="8,0" FontSize="12" Background="White" BorderBrush="#E0E0E0"
+                    BorderThickness="1" Cursor="Hand">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#F0F0F0"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+
+                <ScrollViewer x:Name="ImageScroll"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto"
+                      Visibility="Collapsed"
+                      PreviewMouseWheel="ImageScroll_MouseWheel">
+                    <Grid x:Name="ImageContainer" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Grid.LayoutTransform>
+                            <ScaleTransform x:Name="ZoomTransform" ScaleX="1" ScaleY="1"/>
+                        </Grid.LayoutTransform>
+                        <Image x:Name="MainImage" Stretch="Uniform"
+                       HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <Canvas x:Name="BoundingBoxCanvas"
+                        Width="{Binding ActualWidth, ElementName=MainImage}"
+                        Height="{Binding ActualHeight, ElementName=MainImage}"
+                        HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="4" Margin="0,12,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="StatusText" Grid.Column="0"
+                   Text="Ready" FontSize="12" Foreground="#888" VerticalAlignment="Center"/>
+                <TextBlock x:Name="DetectionCount" Grid.Column="1"
+                   FontSize="12" Foreground="#888" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <Button Grid.Column="2" Content="Retrain Model" Click="Retrain_Click"
+                Padding="16,7" Background="White" Foreground="#333"
+                BorderBrush="#E0E0E0" BorderThickness="1" FontSize="13" Cursor="Hand">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        CornerRadius="4" Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#F5F5F5"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
