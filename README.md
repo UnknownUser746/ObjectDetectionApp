@@ -71,9 +71,6 @@ The app includes two ML.NET object detection models trained using Visual Studio'
 
 Each model includes its training pipeline (`.training.cs`) and consumption API (`.consumption.cs`), making it straightforward to retrain or fine-tune with new data.
 
-## Contributing
-
-Pull requests are welcome! For major changes, please open an issue first to discuss what you'd like to change.
 
 ## License
 
